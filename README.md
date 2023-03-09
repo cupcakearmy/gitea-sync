@@ -11,7 +11,7 @@ version: '3.8'
 
 services:
   sync:
-    image: cupcakearmy/gitea-sync
+    image: cupcakearmy/gitea-sync:1
     restart: unless-stopped
     env_file: .env
 ```
