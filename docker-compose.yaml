@@ -1,7 +1,11 @@
+# FOR DEVELOPMENT ONLY
+# See README.md for an example
+
 version: "3.8"
 
 services:
   job:
+    image: cupcakearmy/gitea-sync
     build: .
     env_file: .env
 

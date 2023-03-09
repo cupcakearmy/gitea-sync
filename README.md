@@ -4,8 +4,16 @@ Simple docker image that syncs your Github repos to a given Gitea server. It tak
 
 ## Quick Start
 
-```yaml
+Create a `docker-compose.yaml` and `.env` (see `.env.sample`). Create and insert tokens and you are ready to go.
 
+```yaml
+version: '3.8'
+
+services:
+  sync:
+    image: cupcakearmy/gitea-sync
+    restart: unless-stopped
+    env_file: .env
 ```
 
 ## Configuration
