@@ -38,12 +38,12 @@ export const Config = {
     level: getEnv('LOG_LEVEL', 'info'),
   },
   github: {
-    scope: simple('GITHUB_SCOPE'),
     token: simple('GITHUB_TOKEN'),
   },
   gitea: {
     host: simple('GITEA_HOST'),
     token: simple('GITEA_TOKEN'),
   },
+  cron: getEnv('CRON', '0 */2 * * *'),
   version: getEnv('npm_package_version', 'unknown'),
 }
