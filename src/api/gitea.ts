@@ -3,6 +3,7 @@ import axios, { AxiosError } from 'axios'
 import { Config } from '../config.js'
 import { logger } from '../logger.js'
 import { ListRepositoriesResponse } from './gitea.types.js'
+import { Repository } from './github.types.js'
 
 const Base = axios.create({
   baseURL: new URL('/api/v1', Config.gitea.host).href,
@@ -76,4 +77,13 @@ export async function listAllRepositories() {
   }
   logger.debug('Listed all repositories in Gitea', { data: repos })
   return repos
+}
+
+export async function updateRepository(owner: string, repo: string, body: Partial<Repository>) {
+  logger.debug('Updating repository', { owner, repo, body })
+  await Base({
+    url: `/repos/${owner}/${repo}`,
+    method: 'PATCH',
+    data: body,
+  })
 }

@@ -1,4 +1,4 @@
-import { listAllRepositories as giteaRepos, mirror, MirrorOptions } from './api/gitea.js'
+import { listAllRepositories as giteaRepos, mirror, MirrorOptions, updateRepository } from './api/gitea.js'
 import { listAllRepositories as githubRepos } from './api/github.js'
 import { Config } from './config.js'
 import { logger } from './logger.js'
@@ -20,7 +20,12 @@ export async function sync() {
       const sameName = syncedRepos.find((r) => r.name === repo.name || r.original_url === repo.clone_url)
       if (sameName) {
         if (sameName.original_url === repo.clone_url) {
-          logger.info('Already synced, skipping', { name: repo.name })
+          if (sameName.private === repo.private) logger.info('Already synced, skipping', { name: repo.name })
+          else {
+            logger.info('Visibility changed, updating', { name: repo.name })
+            const [owner, repository] = sameName.full_name.split('/')
+            await updateRepository(owner, repository, { private: repo.private })
+          }
         } else {
           logger.error('Repo with same name but different url', {
             name: repo.name,
@@ -42,9 +47,9 @@ export async function sync() {
       logger.info('Mirrored repository', { name: repo.name })
     }
     logger.info('Finished sync')
-  } catch (e) {
-    logger.error(e)
-    logger.error('Failed to sync')
+  } catch (error) {
+    logger.debug(error)
+    logger.error('Failed to sync', { error: error instanceof Error ? error.message : 'Unknown error' })
   } finally {
     running = false
   }
