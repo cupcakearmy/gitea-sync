@@ -1,10 +1,10 @@
-# Backup Github repos to Gitea
+# Backup GitHub repos to Gitea
 
-Simple docker image that syncs your Github repos to a given Gitea server. It takes all the repos (public and private) and sets up a mirror. Private repos will stay a private mirror. Repos that are already setup will be skipped.
+Simple docker image that syncs your GitHub repos to a given Gitea server. It takes all the repos (public and private) and sets up a mirror. Private repos will stay a private mirror. Repos that are already set up will be skipped.
 
 ## Quick Start
 
-Create a `docker-compose.yaml` and `.env` (see `.env.sample`). Create and insert tokens and you are ready to go.
+Create a `docker-compose.yaml` and `.env` (see `.env.sample`). Create and insert tokens, and you are ready to go.
 
 ```yaml
 version: '3.8'
@@ -19,13 +19,14 @@ services:
 ## Configuration
 
 ```sh
-# Github PAT
-# Also works with the new fine grained, read-only tokens
+# Github PAT (deprecated)
+# or
+# Fine Grained token (Metadata and Content read-only scopes required)
 GITHUB_TOKEN=
 
 # Host of the Gitea server
 GITEA_HOST=
-# Gitea token
+# Gitea token (scopes: repo)
 GITEA_TOKEN=
 
 # OPTIONAL
