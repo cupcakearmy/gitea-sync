@@ -1,19 +1,11 @@
-FROM node:18.15-alpine as base
-
-RUN npm -g install pnpm@7
+FROM oven/bun:1 as base
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
 
-FROM base as build
-RUN pnpm install --frozen-lockfile
+FROM base as builder
 COPY . .
-RUN pnpm run build
+RUN bun install --production --frozen-lockfile
+RUN bun build --target bun --minify src/index.ts --outfile app.js
 
-FROM base as runner
-RUN pnpm install --frozen-lockfile --prod
-COPY --from=build /app/dist /app/dist
-CMD ["pnpm", "run", "start"]
-
-
-
-
+FROM base
+COPY --from=builder /app/app.js .
+ENTRYPOINT [ "bun", "run", "app.js" ]
