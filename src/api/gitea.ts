@@ -12,6 +12,8 @@ const Base = axios.create({
   },
 })
 
+const l = logger.child({ api: 'gitea' })
+
 export type MirrorOptions = {
   private: boolean
   auth_token: string
@@ -20,7 +22,7 @@ export type MirrorOptions = {
 }
 export async function mirror(options: MirrorOptions) {
   try {
-    logger.debug('Mirroring repository', options)
+    l.debug('mirroring repository', options)
     const response = await Base({
       url: '/repos/migrate',
       method: 'POST',
@@ -41,18 +43,19 @@ export async function mirror(options: MirrorOptions) {
         releases: true,
       },
     })
-    logger.debug('Mirrored repository', { data: response.data })
+    l.debug('mirrored repository', { data: response.data })
     return response.data
   } catch (e) {
     if (e instanceof AxiosError) {
-      logger.error('Error mirroring repository', e.response?.data)
+      l.error('Error mirroring repository', e.response?.data)
     } else {
-      logger.error('Unknown error', e)
+      l.error('Unknown error', e)
     }
   }
 }
 
 export async function listRepositories(page: number, limit: number) {
+  l.debug(`listing repos`, { page, limit })
   const response = await Base<ListRepositoriesResponse>({
     url: '/user/repos',
     method: 'GET',
@@ -65,22 +68,23 @@ export async function listRepositories(page: number, limit: number) {
 }
 
 export async function listAllRepositories() {
-  logger.debug('Listing all repositories in Gitea')
+  l.debug('listing all repositories')
   const limit = 50
   const repos: ListRepositoriesResponse = []
   let page = 1
   while (true) {
+    l.debug('listing page', { page })
     const response = await listRepositories(page, limit)
     repos.push(...response)
     if (response.length < limit) break
     page++
   }
-  logger.debug('Listed all repositories in Gitea', { data: repos })
+  l.debug('listed all repositories', { repos: repos.map((repo) => repo.name) })
   return repos
 }
 
 export async function updateRepository(owner: string, repo: string, body: Partial<Repository>) {
-  logger.debug('Updating repository', { owner, repo, body })
+  l.debug('updating repository', { owner, repo, body })
   await Base({
     url: `/repos/${owner}/${repo}`,
     method: 'PATCH',

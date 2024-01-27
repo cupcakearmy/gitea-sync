@@ -5,30 +5,32 @@ import { logger } from './logger.js'
 
 let running = false
 
+const l = logger.child({ context: 'runner' })
+
 export async function sync() {
   if (running) {
-    logger.info('Already running, skipping')
+    l.info('already running, skipping')
     return
   }
   try {
-    logger.info('Starting sync')
+    l.info('starting sync')
     const syncedRepos = await giteaRepos()
     const toSync = await githubRepos()
-    logger.debug('Loaded repos', { remote: toSync.length, local: syncedRepos.length })
+    l.debug('loaded repos', { remote: toSync.length, local: syncedRepos.length })
 
     for (const repo of toSync) {
+      const lr = l.child({ repo: repo.name })
       const sameName = syncedRepos.find((r) => r.name === repo.name || r.original_url === repo.clone_url)
       if (sameName) {
         if (sameName.original_url === repo.clone_url) {
           if (sameName.private === repo.private) logger.info('Already synced, skipping', { name: repo.name })
           else {
-            logger.info('Visibility changed, updating', { name: repo.name })
+            lr.info('visibility changed, updating')
             const [owner, repository] = sameName.full_name.split('/')
             await updateRepository(owner, repository, { private: repo.private })
           }
         } else {
-          logger.error('Repo with same name but different url', {
-            name: repo.name,
+          lr.error('repo with same name but different url', {
             url: repo.clone_url,
             original_url: sameName.original_url,
           })
@@ -42,14 +44,14 @@ export async function sync() {
         private: repo.private,
         auth_token: Config.github.token,
       }
-      logger.info('Mirroring repository', options)
+      lr.info('mirroring repository', options)
       await mirror(options)
-      logger.info('Mirrored repository', { name: repo.name })
+      lr.info('mirrored repository')
     }
-    logger.info('Finished sync')
+    l.info('Finished sync')
   } catch (error) {
-    logger.debug(error)
-    logger.error('Failed to sync', { error: error instanceof Error ? error.message : 'Unknown error' })
+    l.debug(error)
+    l.error('Failed to sync', { error: error instanceof Error ? error.message : 'Unknown error' })
   } finally {
     running = false
   }

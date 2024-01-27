@@ -1,7 +1,3 @@
-import { config } from 'dotenv'
-
-config()
-
 function getEnv(key: string, fallback: string, parse?: undefined, validator?: (s: string) => boolean): string
 function getEnv<T>(key: string, fallback: T, parse: (value: string) => T, validator?: (T: string) => boolean): T
 function getEnv<T>(
@@ -17,12 +13,6 @@ function getEnv<T>(
     process.exit(1)
   }
   return parsed
-}
-
-function parseBoolean(value: string): boolean {
-  value = value.toLowerCase()
-  const truthy = ['true', 'yes', '1', 'y']
-  return truthy.includes(value)
 }
 
 function isPresent(s: string): boolean {
