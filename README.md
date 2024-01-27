@@ -26,7 +26,7 @@ GITHUB_TOKEN=
 
 # Host of the Gitea server
 GITEA_HOST=
-# Gitea token (scopes: repo)
+# Gitea token (scopes: repos: read and write; user: read)
 GITEA_TOKEN=
 
 # OPTIONAL

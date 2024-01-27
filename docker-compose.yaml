@@ -1,10 +1,10 @@
 # FOR DEVELOPMENT ONLY
 # See README.md for an example
 
-version: "3.8"
+version: '3.8'
 
 services:
-  job:
+  sync:
     image: cupcakearmy/gitea-sync
     build: .
     env_file: .env
@@ -18,4 +18,4 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     ports:
-      - "3000:3000"
+      - '3000:3000'
