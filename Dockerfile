@@ -1,11 +1,11 @@
-FROM oven/bun:1 as base
+FROM denoland/deno AS builder
 WORKDIR /app
 
-FROM base as builder
 COPY . .
-RUN bun install --production --frozen-lockfile
-RUN bun build --target bun --minify src/index.ts --outfile app.js
+RUN deno install --frozen
+RUN deno compile --allow-net --allow-env --no-prompt --output /app/sync ./src/index.ts
 
-FROM base
-COPY --from=builder /app/app.js .
-ENTRYPOINT [ "bun", "run", "app.js" ]
+FROM debian:stable-slim
+WORKDIR /app
+COPY --from=builder /app/sync .
+ENTRYPOINT [ "/app/sync" ]

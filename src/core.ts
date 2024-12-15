@@ -1,7 +1,7 @@
-import { listAllRepositories as giteaRepos, mirror, MirrorOptions, updateRepository } from './api/gitea.js'
-import { listAllRepositories as githubRepos } from './api/github.js'
-import { Config } from './config.js'
-import { logger } from './logger.js'
+import { listAllRepositories as giteaRepos, mirror, MirrorOptions, updateRepository } from './api/gitea.ts'
+import { listAllRepositories as githubRepos } from './api/github.ts'
+import { Config } from './config.ts'
+import { logger } from './logger.ts'
 
 let running = false
 
@@ -27,6 +27,10 @@ export async function sync() {
           else {
             lr.info('visibility changed, updating')
             const [owner, repository] = sameName.full_name.split('/')
+            if (!owner || !repository) {
+              lr.error('invalid repository name', { full_name: sameName.full_name })
+              continue
+            }
             await updateRepository(owner, repository, { private: repo.private })
           }
         } else {

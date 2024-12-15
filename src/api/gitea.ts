@@ -1,9 +1,9 @@
 import axios, { AxiosError } from 'axios'
 
-import { Config } from '../config.js'
-import { logger } from '../logger.js'
-import { ListRepositoriesResponse } from './gitea.types.js'
-import { Repository } from './github.types.js'
+import { Config } from '../config.ts'
+import { logger } from '../logger.ts'
+import { ListRepositoriesResponse } from './gitea.types.ts'
+import { Repository } from './github.types.ts'
 
 const Base = axios.create({
   baseURL: new URL('/api/v1', Config.gitea.host).href,

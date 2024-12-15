@@ -1,8 +1,8 @@
 import cron from 'node-cron'
 
-import { Config } from './config.js'
-import { sync } from './core.js'
-import { logger } from './logger.js'
+import { Config } from './config.ts'
+import { sync } from './core.ts'
+import { logger } from './logger.ts'
 
 logger.info(`Mirror manager - ${Config.version}`, { version: Config.version })
 

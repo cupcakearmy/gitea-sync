@@ -1,6 +1,6 @@
 import winston from 'winston'
 
-import { Config } from './config.js'
+import { Config } from './config.ts'
 
 export const logger = winston.createLogger({
   level: Config.logging.level,

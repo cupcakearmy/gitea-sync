@@ -6,11 +6,11 @@ function getEnv<T>(
   parse?: (value: string) => T,
   validator?: (s: string | T) => boolean
 ): T | string {
-  const value = process.env[key]
+  const value = Deno.env.get(key)
   const parsed = value === undefined ? fallback : parse ? parse(value) : value
   if (validator && !validator(parsed)) {
     console.error(`Invalid or missing value for ${key}: ${value}`)
-    process.exit(1)
+    Deno.exit(1)
   }
   return parsed
 }

@@ -1,4 +1,4 @@
 *
-!package.json
-!bun.lockb
+!deno.jsonc
+!deno.lock
 !src

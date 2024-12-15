@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-import { Config } from '../config.js'
-import type { ListRepositoriesResponse } from './github.types.js'
-import { logger } from '../logger.js'
+import { Config } from '../config.ts'
+import type { ListRepositoriesResponse } from './github.types.ts'
+import { logger } from '../logger.ts'
 
 const Base = axios.create({
   baseURL: 'https://api.github.com',
