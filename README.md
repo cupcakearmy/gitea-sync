@@ -33,6 +33,12 @@ GITEA_TOKEN=
 
 # Cron schedule
 CRON="0 */2 * * *"
+
+# Debug level
+DEBUG_LEVEL=debug
+
+# Only run one, skip cron and exit
+RUN_ONCE=1
 ```
 
 ## Known limitations

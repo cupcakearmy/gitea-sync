@@ -35,5 +35,6 @@ export const Config = {
     token: simple('GITEA_TOKEN'),
   },
   cron: getEnv('CRON', '0 */2 * * *'),
+  runOnce: getEnv('RUN_ONCE', false, Boolean),
   version: getEnv('npm_package_version', 'unknown'),
 }

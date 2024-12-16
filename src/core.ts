@@ -18,10 +18,14 @@ export async function sync() {
     const toSync = await githubRepos()
     l.debug('loaded repos', { remote: toSync.length, local: syncedRepos.length })
 
+    // List of all the repos in gitea, that are not on github
+    const notInSource = new Set(syncedRepos.map((r) => r.name))
+
     for (const repo of toSync) {
       const lr = l.child({ repo: repo.name })
       const sameName = syncedRepos.find((r) => r.name === repo.name || r.original_url === repo.clone_url)
       if (sameName) {
+        notInSource.delete(sameName.name)
         if (sameName.original_url === repo.clone_url) {
           if (sameName.private === repo.private) logger.info('Already synced, skipping', { name: repo.name })
           else {
@@ -51,6 +55,9 @@ export async function sync() {
       lr.info('mirroring repository', options)
       await mirror(options)
       lr.info('mirrored repository')
+    }
+    if (notInSource.size) {
+      l.info(`Found ${notInSource.size} surplus repositories in gitea`, { repos: [...notInSource] })
     }
     l.info('Finished sync')
   } catch (error) {
